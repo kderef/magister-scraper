@@ -49,7 +49,7 @@ def log(type: str, msg: str):
 
 
 class Magister:
-    def __init__(self, school: str, login_data: tuple, nobrowser=True) -> None:
+    def __init__(self, nobrowser=True) -> None:
         """arguments:
         * school (string) -> name of the school to log into
         * login_data (tuple) -> tuple with username and password, e.g: ("username", "password")
@@ -59,8 +59,8 @@ class Magister:
 
         log("INFO", f"nobrowser = {nobrowser}")
 
-        self.school = school
-        self.logindata = login_data
+        self.school = config.SCHOOL
+        self.logindata = config.LOGIN
 
         if not isfile(DRIVER):
             raise DriverNotFoundError("ERROR: driver needs to be in folder.")
@@ -74,8 +74,8 @@ class Magister:
         print("\n\033[93mloading login page...", end="\033[92m")
 
     def login(self):
-
         username, password = self.logindata
+        
         self.driver.get(f"https://{self.school}.magister.net")
 
         while True:
