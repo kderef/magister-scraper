@@ -1,7 +1,7 @@
 # magister-scraper
 scraper for Magister 6
 
-==dependencies==:
+***dependencies***:
 * selenium
 
 in order to install selenium:
