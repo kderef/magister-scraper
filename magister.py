@@ -12,6 +12,9 @@ from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox, FirefoxOptions
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 if platform.system() == "Windows":
     DRIVER = join(getcwd(), config.BROWSER)
@@ -41,6 +44,14 @@ class Cijfer:
             self.weging,
             self.date,
             self.inhalen,
+        ]
+    @property
+    def simple(self):
+        return [
+            self.vak,
+            self.cijfer,
+            self.weging,
+            self.date
         ]
 
 
@@ -75,16 +86,13 @@ class Magister:
 
     def login(self):
         username, password = self.logindata
-        
-        self.driver.get(f"https://{self.school}.magister.net")
 
-        while True:
-            try:
-                self.driver.find_element_by_id("username")
-            except NoSuchElementException:
-                pass
-            else:
-                break
+        self.driver.get(f"https://{self.school}.magister.net")
+        
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "username"))
+        )
+
         print("done.\033[0m")
 
         print("\n\033[93mlogging in...", end="\033[92m")
@@ -96,61 +104,46 @@ class Magister:
         print("done.\033[0m")
 
         print("\n\033[93mloading home page...", end="\033[92m")
-        while True:
-            try:
-                self.driver.find_element_by_id("agenda-widget")
-            except NoSuchElementException:
-                pass
-            else:
-                break
+
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "agenda-widget"))
+        )
 
         print("done.\033[0m")
         """ login successful """
 
     def agenda_items(self) -> list:
         # TODO implement this
-        while True:
-            try:
-                self.driver.find_element_by_class_name("icon-calendar")
-            except NoSuchElementException:
-                break
+
+        WebDriverWait(self.driver, 6).until_not(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "icon-calendar"))
+        )
 
         times = [i.text for i in self.driver.find_elements_by_class_name("les-info")]
         # items = [i.text for i in self.driver.find_elements_by_tag_name("td")]
         print(times)
 
     def go_home(self):
-        while True:
-            try:
-                btn = self.driver.find_element_by_id("menu-vandaag")
-            except NoSuchElementException:
-                pass
-            else:
-                btn.click()
-                log("INFO", "went to home page")
-                break
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "menu-vandaag"))
+        )
+        self.driver.find_element_by_id("menu-vandaag").click()
+        log("INFO", "went to homepage")
+
 
     def go_agenda(self):
-        while True:
-            try:
-                btn = self.driver.find_element_by_id("menu-agenda")
-            except NoSuchElementException:
-                pass
-            else:
-                btn.click()
-                log("INFO", "went to agenda page")
-                break
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "menu-agenda"))
+        )
+        self.driver.find_element_by_id("menu-agenda").click()
+        log("INFO", "went to agenda page")
 
     def go_leermiddelen(self):
-        while True:
-            try:
-                btn = self.driver.find_element_by_id("menu-leermiddelen")
-            except NoSuchElementException:
-                pass
-            else:
-                btn.click()
-                log("INFO", "went to leermiddelen page")
-                break
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "menu-leermiddelen"))
+        )
+        self.driver.find_element_by_id("menu-leermiddelen").click()
+        log("INFO", "went to leermiddelen page")
 
     def leermiddelen(self) -> dict:
         self.go_leermiddelen()
@@ -207,23 +200,16 @@ class Magister:
             - float_notation (string) -> default ','\n
             if you want to convert your grades into floats (e.g "6.7" -> 6.7) specify float_notation as '.'
         """
-        while True:
-            try:
-                btn = self.driver.find_element_by_id("menu-cijfers")
-            except NoSuchElementException:
-                pass
-            else:
-                btn.click()
-                log("INFO", "went to 'cijfers'")
-                break
 
-        while True:
-            try:
-                self.driver.find_element_by_tag_name("td")
-            except NoSuchElementException:
-                pass
-            else:
-                break
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "menu-cijfers"))
+        )
+        self.driver.find_element_by_id("menu-cijfers").click()
+        log("INFO", "went to 'cijfers'")
+
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.TAG_NAME, "td"))
+        )
 
         cijfers = []
 
@@ -256,35 +242,22 @@ class Magister:
 
     def cijfers_all(self):
         # NOTE work in progress
-        while True:
-            try:
-                btn = self.driver.find_element_by_id("menu-cijfers")
-            except NoSuchElementException:
-                pass
-            else:
-                btn.click()
-                log("INFO", "went to 'cijfers'")
-                break
 
-        while True:
-            try:
-                btn = self.driver.find_element_by_tag_name(
-                    "dna-button"
-                )  # dna-button = 'uitgebreide weergave'
-            except NoSuchElementException:
-                pass
-            else:
-                btn.click()
-                log("INFO", "went to 'cijfers uitgebreid'")
-                break
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "menu-cijfers"))
+        )
+        self.driver.find_element_by_id("menu-cijfers").click()
+        log("INFO", "went to 'cijfers'")
 
-        while True:
-            try:
-                self.driver.find_element_by_tag_name("th")
-            except NoSuchElementException:
-                pass
-            else:
-                break
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.TAG_NAME, "dna-button"))
+        )
+        self.driver.find_element_by_tag_name("dna-button").click()
+        log("INFO", "went to 'cijfers uitgebreid'")
+
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.TAG_NAME, "th"))
+        )
 
         """ loaded uitgebreide cijfers """
 
