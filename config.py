@@ -8,3 +8,12 @@ class Browsers:
 # if using firefox or firefox based:
 #       BROWSER = Browsers.Firefox
 BROWSER = Browsers.firefox
+
+# school name, example: SCHOOL = "osghengelo"
+SCHOOL = "schoolname"
+
+# magister login info
+LOGIN = (
+    "username",
+    "password"
+)
