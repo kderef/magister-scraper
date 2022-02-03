@@ -62,9 +62,9 @@ class Magister:
         * nobrowser (bool) -> if True, make browser window invisible.
         """
         system("cls||clear")
-        nobrowser = not config.WINDOW_VISIBLE
+        self.nobrowser = not config.WINDOW_VISIBLE
 
-        log("INFO", f"nobrowser = {nobrowser}")
+        log("INFO", f"nobrowser = {self.nobrowser}")
 
         self.school = config.SCHOOL
         self.logindata = config.LOGIN
@@ -75,23 +75,23 @@ class Magister:
         log("INFO", '[driver path] = "{}"'.format(DRIVER))
         if config.BROWSER.startswith("geckodriver"):
             self.opts = FirefoxOptions()
-            self.opts.headless = nobrowser
+            self.opts.headless = self.nobrowser
 
             log("INFO", "starting client...")
             self.driver = Firefox(options=self.opts, executable_path=DRIVER)
         elif config.BROWSER.startswith("operadriver"):
             self.opts = ChromeOptions()
-            if nobrowser: self.opts.add_argument("--headless")
+
             self.opts.add_argument("--log-level=3")
             self.opts.add_argument("--silent")
-            self.opts.add_experimental_option('w3c', True)
-            self.opts.binary_location = config.Locations.operaGX 
+            self.opts.add_experimental_option("w3c", True)
+            self.opts.binary_location = config.Locations.operaGX
 
             self.driver = Opera(options=self.opts, executable_path=DRIVER)
-
         else:
             self.opts = ChromeOptions()
-            if nobrowser: self.opts.add_argument("--headless")
+            if self.nobrowser:
+                self.opts.add_argument("--headless")
             self.opts.add_argument("--log-level=3")
             self.opts.add_argument("--silent")
             self.driver = Chrome(options=self.opts, executable_path=DRIVER)
@@ -99,16 +99,18 @@ class Magister:
         log("INFO", "starting client...")
 
         print("\n\033[93mloading login page...", end="\033[92m")
-        sleep(.3)
+        sleep(0.3)
 
     def login(self):
         username, password = self.logindata
 
         self.driver.get(f"https://{self.school}.magister.net")
-        windowtitle = self.driver.title
 
-        if config.BROWSER.startswith("operadriver" and len(self.driver.window_handles) > 1):
-            self.driver.switch_to.window(self.driver.window_handles[-1]) # switch tabs
+        if (
+            config.BROWSER.startswith("operadriver")
+            and len(self.driver.window_handles) > 1
+        ):
+            self.driver.switch_to.window(self.driver.window_handles[-1])  # switch tabs
 
         WebDriverWait(self.driver, 6).until(
             EC.presence_of_element_located((By.ID, "username"))
@@ -120,10 +122,12 @@ class Magister:
 
         self.driver.find_element(By.ID, "username").send_keys(username)
         self.driver.find_element(By.ID, "username_submit").click()
-        WebDriverWait(self.driver, 6).until( EC.presence_of_element_located((By.ID, "password")) )
+        WebDriverWait(self.driver, 6).until(
+            EC.presence_of_element_located((By.ID, "password"))
+        )
         self.driver.find_element(By.ID, "password").send_keys(password)
         self.driver.find_element(By.ID, "password_submit").click()
-        
+
         print("done.\033[0m")
 
         print("\n\033[93mloading home page (this may take a while)...", end="\033[92m")
@@ -234,17 +238,23 @@ class Magister:
         )
 
         cijfers = []
-        sleep(.5)
+        sleep(0.5)
 
         result = [i.text for i in self.driver.find_elements_by_tag_name("td")]
 
-        if config.BROWSER.startswith("chromedriver") or config.BROWSER.startswith("operadriver"):
+        if config.BROWSER.startswith("chromedriver") or config.BROWSER.startswith(
+            "operadriver"
+        ):
             cijfers_spl = [
-                list(y) for x, y in itertools.groupby(result, lambda z: z == " ") if not x
+                list(y)
+                for x, y in itertools.groupby(result, lambda z: z == " ")
+                if not x
             ]
         else:
             cijfers_spl = [
-                list(y) for x, y in itertools.groupby(result, lambda z: z == "") if not x
+                list(y)
+                for x, y in itertools.groupby(result, lambda z: z == "")
+                if not x
             ]
         """
         order: [vak, date, description, cijfer, weging]
