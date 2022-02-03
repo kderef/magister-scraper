@@ -74,21 +74,21 @@ class Magister:
 
         log("INFO", '[driver path] = "{}"'.format(DRIVER))
         if config.BROWSER == "geckodriver" or config.BROWSER == "geckodriver.exe":
-            opts = FirefoxOptions()
-            opts.headless = nobrowser
+            self.opts = FirefoxOptions()
+            self.opts.headless = nobrowser
             log("INFO", "starting client...")
-            self.driver = Firefox(options=opts, executable_path=DRIVER)
+            self.driver = Firefox(options=self.opts, executable_path=DRIVER)
         else:
-            if config.USING_OPERA:
-                opts = Options()
-                opts.headless = nobrowser
-                opts.binary_location = config.Locations.operaGX 
+            if config.BROWSER.startswith("operadriver"):
+                self.opts = Options()
+                self.opts.headless = nobrowser
+                self.opts.binary_location = config.Locations.operaGX 
 
-                self.driver = Opera(options=opts, executable_path=DRIVER)
+                self.driver = Opera(options=self.opts, executable_path=DRIVER)
             else:
-                opts = ChromeOptions()
-                opts.headless = nobrowser
-                self.driver = Chrome(options=opts, executable_path=DRIVER)
+                self.opts = ChromeOptions()
+                self.opts.headless = nobrowser
+                self.driver = Chrome(options=self.opts, executable_path=DRIVER)
 
         log("INFO", "starting client...")
 
@@ -106,11 +106,19 @@ class Magister:
         print("done.\033[0m")
 
         print("\n\033[93mlogging in...", end="\033[92m")
-        self.driver.find_element(By.ID, "username").send_keys(username)
-        self.driver.find_element(By.ID, "username_submit").click()
-        sleep(0.3)
-        self.driver.find_element(By.ID, "password").send_keys(password)
-        self.driver.find_element(By.ID, "password_submit").click()
+        try:
+            self.driver.find_element(By.ID, "username").send_keys(username)
+            self.driver.find_element(By.ID, "username_submit").click()
+            sleep(0.3)
+            self.driver.find_element(By.ID, "password").send_keys(password)
+            self.driver.find_element(By.ID, "password_submit").click()
+        except AttributeError:
+            self.driver.find_element(By.ID, "username").send_keys(username)
+            self.driver.find_element(By.ID, "username_submit").click()
+            sleep(0.3)
+            self.driver.find_element(By.ID, "password").send_keys(password)
+            self.driver.find_element(By.ID, "password_submit").click()
+        
         print("done.\033[0m")
 
         print("\n\033[93mloading home page...", end="\033[92m")
@@ -221,8 +229,10 @@ class Magister:
         )
 
         cijfers = []
+        sleep(.5)
 
         result = [i.text for i in self.driver.find_elements_by_tag_name("td")]
+        print(result)
 
         cijfers_spl = [
             list(y) for x, y in itertools.groupby(result, lambda z: z == "") if not x
