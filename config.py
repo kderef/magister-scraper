@@ -9,7 +9,7 @@ class Browsers:
     opera = "operadriver.exe"
 
 class Locations:
-    operaGX = "C:\\Users\\" + getuser() + "\\AppData\\Local\\Programs\\opera.exe"
+    operaGX = "C:\\Users\\" + getuser() + "\\AppData\\Local\\Programs\\Opera GX\\opera.exe"
 
 # -------------------------------------------------- #
 # if using chrome or chromium based:
