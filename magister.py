@@ -19,10 +19,7 @@ from selenium.webdriver.common.by import By
 
 running_windows = platform.system() == "Windows"
 
-if running_windows:
-    DRIVER = join(getcwd(), config.BROWSER)
-else:
-    DRIVER = join(getcwd(), config.BROWSER)
+DRIVER = join(getcwd(), config.BROWSER)
 
 
 class DriverNotFoundError(Exception):
