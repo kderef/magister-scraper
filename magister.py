@@ -16,7 +16,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-if platform.system() == "Windows":
+running_windows = platform.system() == "Windows"
+
+if running_windows:
     DRIVER = join(getcwd(), config.BROWSER)
 else:
     DRIVER = join(getcwd(), config.BROWSER)
@@ -45,14 +47,10 @@ class Cijfer:
             self.date,
             self.inhalen,
         ]
+
     @property
     def simple(self):
-        return [
-            self.vak,
-            self.cijfer,
-            self.weging,
-            self.date
-        ]
+        return [self.vak, self.cijfer, self.weging, self.date]
 
 
 def log(type: str, msg: str):
@@ -88,7 +86,7 @@ class Magister:
         username, password = self.logindata
 
         self.driver.get(f"https://{self.school}.magister.net")
-        
+
         WebDriverWait(self.driver, 6).until(
             EC.presence_of_element_located((By.ID, "username"))
         )
@@ -129,7 +127,6 @@ class Magister:
         )
         self.driver.find_element_by_id("menu-vandaag").click()
         log("INFO", "went to homepage")
-
 
     def go_agenda(self):
         WebDriverWait(self.driver, 6).until(
