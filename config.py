@@ -8,7 +8,7 @@ class Browsers:
     chrome  = "chromedriver.exe" if running_windows else "chromedriver"
 
 class Locations:
-    operaGX = f"C:\\{getuser()}\\AppData\\Local\\Programs\\opera.exe"
+    operaGX = f"C:\\Users\\{getuser()}\\AppData\\Local\\Programs\\opera.exe"
 
 # -------------------------------------------------- #
 # if using chrome or chromium based:
