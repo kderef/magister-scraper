@@ -1,7 +1,7 @@
 from platform import system
 from getpass import getuser
 
-RUNNING_WINDOWS = system() == "Windows"
+RUNNING_WINDOWS = (system() == "Windows")
 
 class Browsers:
     firefox = "geckodriver.exe" if RUNNING_WINDOWS else "geckodriver"
@@ -20,12 +20,12 @@ if using operaGX:
 if using firefox:
     BROWSER = Browsers.firefox
 """
-BROWSER = Browsers.chrome
+BROWSER = Browsers.opera
 
 # school name, example: SCHOOL = "osghengelo"
-SCHOOL = "schoolname"
+SCHOOL = "osghengelo"
 
-# specify whether to spawn a debug window or not
+# specifies whether the browser window will be visible or not
 # values: True or False
 WINDOW_VISIBLE = False
 
