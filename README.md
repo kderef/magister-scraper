@@ -11,7 +11,6 @@ or download it from [here](https://pypi.org/project/selenium/).
 ---
 ## download instructions  
 click on 'code' then 'download as zip'.  
-then extract the zip file.  
 
 ---
 ## how to use.  
