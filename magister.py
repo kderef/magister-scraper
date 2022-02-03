@@ -73,27 +73,33 @@ class Magister:
             raise DriverNotFoundError("ERROR: driver needs to be in folder.")
 
         log("INFO", '[driver path] = "{}"'.format(DRIVER))
-        if config.BROWSER == "geckodriver" or config.BROWSER == "geckodriver.exe":
+        if config.BROWSER.startswith("geckodriver"):
             self.opts = FirefoxOptions()
             self.opts.headless = nobrowser
+
             log("INFO", "starting client...")
             self.driver = Firefox(options=self.opts, executable_path=DRIVER)
-        else:
-            if config.BROWSER.startswith("operadriver"):
-                self.opts = ChromeOptions()
-                self.opts.headless = nobrowser
-                self.opts.add_experimental_option('w3c', True)
-                self.opts.binary_location = config.Locations.operaGX 
+        elif config.BROWSER.startswith("operadriver"):
+            self.opts = ChromeOptions()
+            if nobrowser: self.opts.add_argument("--headless")
+            self.opts.add_argument("--log-level=3")
+            self.opts.add_argument("--silent")
+            self.opts.add_experimental_option('w3c', True)
+            self.opts.binary_location = config.Locations.operaGX 
 
-                self.driver = Opera(options=self.opts, executable_path=DRIVER)
-            else:
-                self.opts = ChromeOptions()
-                self.opts.headless = nobrowser
-                self.driver = Chrome(options=self.opts, executable_path=DRIVER)
+            self.driver = Opera(options=self.opts, executable_path=DRIVER)
+
+        else:
+            self.opts = ChromeOptions()
+            if nobrowser: self.opts.add_argument("--headless")
+            self.opts.add_argument("--log-level=3")
+            self.opts.add_argument("--silent")
+            self.driver = Chrome(options=self.opts, executable_path=DRIVER)
 
         log("INFO", "starting client...")
 
         print("\n\033[93mloading login page...", end="\033[92m")
+        sleep(.3)
 
     def login(self):
         username, password = self.logindata
@@ -110,16 +116,16 @@ class Magister:
 
         self.driver.find_element(By.ID, "username").send_keys(username)
         self.driver.find_element(By.ID, "username_submit").click()
-        sleep(0.3)
+        WebDriverWait(self.driver, 6).until( EC.presence_of_element_located((By.ID, "password")) )
         self.driver.find_element(By.ID, "password").send_keys(password)
         self.driver.find_element(By.ID, "password_submit").click()
         
         print("done.\033[0m")
 
-        print("\n\033[93mloading home page...", end="\033[92m")
+        print("\n\033[93mloading home page (this may take a while)...", end="\033[92m")
 
-        WebDriverWait(self.driver, 6).until(
-            EC.presence_of_element_located((By.ID, "agenda-widget"))
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located((By.ID, "menu-vandaag"))
         )
 
         print("done.\033[0m")
@@ -227,11 +233,15 @@ class Magister:
         sleep(.5)
 
         result = [i.text for i in self.driver.find_elements_by_tag_name("td")]
-        print(result)
 
-        cijfers_spl = [
-            list(y) for x, y in itertools.groupby(result, lambda z: z == "") if not x
-        ]
+        if config.BROWSER.startswith("chromedriver") or config.BROWSER.startswith("operadriver"):
+            cijfers_spl = [
+                list(y) for x, y in itertools.groupby(result, lambda z: z == " ") if not x
+            ]
+        else:
+            cijfers_spl = [
+                list(y) for x, y in itertools.groupby(result, lambda z: z == "") if not x
+            ]
         """
         order: [vak, date, description, cijfer, weging]
         dict return:
@@ -278,6 +288,6 @@ class Magister:
         # TODO implement
 
     def stop(self):
+        log("INFO", "stopping driver...")
         self.driver.quit()
-        log("INFO", "driver stopped, exiting...")
         sys.exit(0)
