@@ -14,9 +14,18 @@ click on 'code' then 'download as zip'.
 then extract the zip file.  
 
 ---
-## how to use. 
-first, go the directory where you downloaded the zip. (see download instructions). 
-unzip it.
-then open the file 'config.py' with notepad or another text editor.
-specify your browser, example:  
-`BROWSER = Browsers.chrome`
+## how to use.  
+first, go the directory where you downloaded the zip. (see download instructions).  
+unzip it.  
+then open the file 'config.py' with notepad or another text editor.  
+specify your browser, example:    
+`BROWSER = Browsers.chrome`  
+
+then specify your school name, example:  
+`SCHOOL = "osghengelo"`  
+
+then specify your login info, example:  
+```LOGIN = (
+  "12345",
+  "weakPassword"
+)```
