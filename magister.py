@@ -2,7 +2,6 @@ if __name__ == "__main__":
     print("this file is a library.\nthis file is not meant to be run.")
     exit(1)
 
-import config
 import itertools
 import platform
 import sys
@@ -11,10 +10,12 @@ from os.path import isfile, join
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Firefox, FirefoxOptions, Chrome, ChromeOptions, Opera
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import Chrome, ChromeOptions, Firefox, FirefoxOptions, Opera
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+import config
 
 running_windows = platform.system() == "Windows"
 
@@ -34,16 +35,25 @@ class Cijfer:
         self.weging = weging
         self.inhalen = inhalen
 
+        if cijfer == "O" or cijfer == "T" or cijfer == "V" or cijfer == "G":
+
+            self.type = "werkhouding"
+        elif cijfer == "Inh":
+            self.type = "inhalen"
+        else:
+            self.type = "cijfer"
+
     @property
     def all(self):
-        return [
-            self.vak,
-            self.description,
-            self.cijfer,
-            self.weging,
-            self.date,
-            self.inhalen,
-        ]
+        return {
+            'vak': self.vak,
+            'desc': self.description,
+            'cijfer': self.cijfer,
+            'weging': self.weging,
+            'date': self.date,
+            'inh': self.inhalen,
+            'type': self.type
+        }
 
     @property
     def simple(self):
@@ -56,11 +66,6 @@ def log(type: str, msg: str):
 
 class Magister:
     def __init__(self) -> None:
-        """arguments:
-        * school (string) -> name of the school to log into
-        * login_data (tuple) -> tuple with username and password, e.g: ("username", "password")
-        * nobrowser (bool) -> if True, make browser window invisible.
-        """
         system("cls||clear")
         self.nobrowser = not config.WINDOW_VISIBLE
 
@@ -178,6 +183,7 @@ class Magister:
 
     def leermiddelen(self) -> dict:
         self.go_leermiddelen()
+
         for second in range(1, 6):
             print(
                 "\033[92mINFO :\033[0m waiting for leermiddelen to load... [{}/5]".format(
@@ -222,14 +228,9 @@ class Magister:
 
         return leermiddelen_dict
 
-    def cijfers(self, float_notation=",") -> list[Cijfer]:
+    def cijfers(self) -> list[Cijfer]:
         """
         retrieve the list of all the latest grades in the 'cijfers' section on the magister homepage.
-
-        arguments:
-            - self
-            - float_notation (string) -> default ','\n
-            if you want to convert your grades into floats (e.g "6.7" -> 6.7) specify float_notation as '.'
         """
 
         WebDriverWait(self.driver, 6).until(
@@ -243,7 +244,7 @@ class Magister:
         )
 
         cijfers = []
-        sleep(0.5)
+        sleep(0.4)
 
         result = [i.text for i in self.driver.find_elements_by_tag_name("td")]
 
@@ -274,11 +275,7 @@ class Magister:
             }
         """
         for i in cijfers_spl:
-            c = (
-                Cijfer(i[0], i[1], i[2], i[3].replace(",", "."), i[4], i[3] == "Inh")
-                if float_notation != ","
-                else Cijfer(i[0], i[1], i[2], i[3], i[4], i[3] == "Inh")
-            )
+            c = Cijfer(i[0], i[1], i[2], i[3].replace(",", "."), i[4], i[3] == "Inh")
             cijfers.append(c)
 
         return cijfers
