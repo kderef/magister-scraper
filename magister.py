@@ -62,7 +62,7 @@ class Magister:
         * nobrowser (bool) -> if True, make browser window invisible.
         """
         system("cls||clear")
-        nobrowser = config.WINDOW_VISIBLE
+        nobrowser = not config.WINDOW_VISIBLE
 
         log("INFO", f"nobrowser = {nobrowser}")
 
