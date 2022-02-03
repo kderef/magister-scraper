@@ -55,13 +55,14 @@ def log(type: str, msg: str):
 
 
 class Magister:
-    def __init__(self, nobrowser=True) -> None:
+    def __init__(self) -> None:
         """arguments:
         * school (string) -> name of the school to log into
         * login_data (tuple) -> tuple with username and password, e.g: ("username", "password")
         * nobrowser (bool) -> if True, make browser window invisible.
         """
         system("cls||clear")
+        nobrowser = config.WINDOW_VISIBLE
 
         log("INFO", f"nobrowser = {nobrowser}")
 
