@@ -24,7 +24,9 @@ then specify your school name, example:
 `SCHOOL = "osghengelo"`  
 
 then specify your login info, example:  
-```LOGIN = (
+```
+LOGIN = (
   "12345",
   "weakPassword"
-)```
+)
+```
