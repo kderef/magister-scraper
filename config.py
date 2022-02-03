@@ -20,10 +20,14 @@ if using operaGX:
 if using firefox:
     BROWSER = Browsers.firefox
 """
-BROWSER = Browsers.chrome
+BROWSER = Browsers.opera
 
 # school name, example: SCHOOL = "osghengelo"
 SCHOOL = "osghengelo"
+
+# specify whether to spawn a debug window or not
+# values: True or False
+WINDOW_VISIBLE = False
 
 LOGIN = (
     "username",
