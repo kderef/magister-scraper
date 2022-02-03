@@ -82,13 +82,15 @@ class Magister:
             if config.USING_OPERA:
                 opts = Options()
                 opts.headless = nobrowser
-                opts.binary_location = config.Locations.operaGX
+                opts.binary_location = config.Locations.operaGX 
+
+                self.driver = Opera(options=opts, executable_path=DRIVER)
             else:
                 opts = ChromeOptions()
                 opts.headless = nobrowser
+                self.driver = Chrome(options=opts, executable_path=DRIVER)
 
-            log("INFO", "starting client...")
-            self.driver = Chrome(options=opts, executable_path=DRIVER)
+        log("INFO", "starting client...")
 
         print("\n\033[93mloading login page...", end="\033[92m")
 
@@ -104,11 +106,11 @@ class Magister:
         print("done.\033[0m")
 
         print("\n\033[93mlogging in...", end="\033[92m")
-        self.driver.find_element_by_id("username").send_keys(username)
-        self.driver.find_element_by_id("username_submit").click()
+        self.driver.find_element(By.ID, "username").send_keys(username)
+        self.driver.find_element(By.ID, "username_submit").click()
         sleep(0.3)
-        self.driver.find_element_by_id("password").send_keys(password)
-        self.driver.find_element_by_id("password_submit").click()
+        self.driver.find_element(By.ID, "password").send_keys(password)
+        self.driver.find_element(By.ID, "password_submit").click()
         print("done.\033[0m")
 
         print("\n\033[93mloading home page...", end="\033[92m")
