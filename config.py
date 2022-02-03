@@ -6,9 +6,10 @@ running_windows = system() == "Windows"
 class Browsers:
     firefox = "geckodriver.exe" if running_windows else "geckodriver"
     chrome  = "chromedriver.exe" if running_windows else "chromedriver"
+    opera = "operadriver.exe"
 
 class Locations:
-    operaGX = f"C:\\Users\\{getuser()}\\AppData\\Local\\Programs\\opera.exe"
+    operaGX = "C:\\Users\\" + getuser() + "\\AppData\\Local\\Programs\\opera.exe"
 
 # -------------------------------------------------- #
 # if using chrome or chromium based:
@@ -20,7 +21,7 @@ BROWSER = Browsers.firefox
 USING_OPERA = 0 # set this to 1 if you are using opera or operaGX
 
 # school name, example: SCHOOL = "osghengelo"
-SCHOOL = "schoolname"
+SCHOOL = "osghengelo"
 
 LOGIN = (
     "username",
