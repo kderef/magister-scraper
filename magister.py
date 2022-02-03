@@ -82,10 +82,14 @@ class Magister:
         elif config.BROWSER.startswith("operadriver"):
             self.opts = ChromeOptions()
 
+            self.opts.binary_location = config.Locations.operaGX
+
+            # NOTE --headless is not supported by opera
+
+            self.opts.add_argument("--disable-gpu")
             self.opts.add_argument("--log-level=3")
             self.opts.add_argument("--silent")
             self.opts.add_experimental_option("w3c", True)
-            self.opts.binary_location = config.Locations.operaGX
 
             self.driver = Opera(options=self.opts, executable_path=DRIVER)
         else:
