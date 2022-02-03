@@ -105,6 +105,11 @@ class Magister:
         username, password = self.logindata
 
         self.driver.get(f"https://{self.school}.magister.net")
+        windowtitle = self.driver.title
+
+        if config.BROWSER.startswith("operadriver"):
+            if len(self.driver.window_handles) > 1:
+                self.driver.switch_to.window(self.driver.window_handles[-1]) # switch tabs
 
         WebDriverWait(self.driver, 6).until(
             EC.presence_of_element_located((By.ID, "username"))
