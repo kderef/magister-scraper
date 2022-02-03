@@ -12,7 +12,6 @@ from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Firefox, FirefoxOptions, Chrome, ChromeOptions, Opera
-from selenium.webdriver.opera.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -80,8 +79,9 @@ class Magister:
             self.driver = Firefox(options=self.opts, executable_path=DRIVER)
         else:
             if config.BROWSER.startswith("operadriver"):
-                self.opts = Options()
+                self.opts = ChromeOptions()
                 self.opts.headless = nobrowser
+                self.opts.add_experimental_option('w3c', True)
                 self.opts.binary_location = config.Locations.operaGX 
 
                 self.driver = Opera(options=self.opts, executable_path=DRIVER)
@@ -106,18 +106,12 @@ class Magister:
         print("done.\033[0m")
 
         print("\n\033[93mlogging in...", end="\033[92m")
-        try:
-            self.driver.find_element(By.ID, "username").send_keys(username)
-            self.driver.find_element(By.ID, "username_submit").click()
-            sleep(0.3)
-            self.driver.find_element(By.ID, "password").send_keys(password)
-            self.driver.find_element(By.ID, "password_submit").click()
-        except AttributeError:
-            self.driver.find_element(By.ID, "username").send_keys(username)
-            self.driver.find_element(By.ID, "username_submit").click()
-            sleep(0.3)
-            self.driver.find_element(By.ID, "password").send_keys(password)
-            self.driver.find_element(By.ID, "password_submit").click()
+
+        self.driver.find_element(By.ID, "username").send_keys(username)
+        self.driver.find_element(By.ID, "username_submit").click()
+        sleep(0.3)
+        self.driver.find_element(By.ID, "password").send_keys(password)
+        self.driver.find_element(By.ID, "password_submit").click()
         
         print("done.\033[0m")
 
