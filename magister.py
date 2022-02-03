@@ -11,7 +11,7 @@ from os.path import isfile, join
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Firefox, FirefoxOptions
+from selenium.webdriver import Firefox, FirefoxOptions, Chrome, ChromeOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -75,11 +75,17 @@ class Magister:
             raise DriverNotFoundError("ERROR: driver needs to be in folder.")
 
         log("INFO", '[driver path] = "{}"'.format(DRIVER))
-        firefox_opts = FirefoxOptions()
-        firefox_opts.headless = nobrowser
-
-        log("INFO", "starting client...")
-        self.driver = Firefox(options=firefox_opts, executable_path=DRIVER)
+        if config.BROWSER == "geckodriver" or config.BROWSER == "geckodriver.exe":
+            opts = FirefoxOptions()
+            opts.headless = nobrowser
+            log("INFO", "starting client...")
+            self.driver = Firefox(options=opts, executable_path=DRIVER)
+        else:
+            opts = ChromeOptions()
+            opts.headless = nobrowser
+            log("INFO", "starting client...")
+            self.driver = Chrome(options=opts, executable_path=DRIVER)
+        
         print("\n\033[93mloading login page...", end="\033[92m")
 
     def login(self):
