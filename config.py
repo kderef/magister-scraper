@@ -9,16 +9,18 @@ class Browsers:
     opera = "operadriver.exe"
 
 class Locations:
-    operaGX = "C:\\Users\\" + getuser() + "\\AppData\\Local\\Programs\\Opera GX\\opera.exe"
+    operaGX = f"C:\\Users\\{getuser()}\\AppData\\Local\\Programs\\Opera GX\\opera.exe"
 
 # -------------------------------------------------- #
-# if using chrome or chromium based:
-#       BROWSER = Browsers.chrome
-# if using firefox or firefox based:
-#       BROWSER = Browsers.Firefox
-BROWSER = Browsers.firefox
-# specify the location of your browser (this only applies if you're using a chromium-based)
-USING_OPERA = 0 # set this to 1 if you are using opera or operaGX
+"""
+if using chrome:
+    BROWSER = Browsers.chrome
+if using operaGX:
+    BROWSER = Browsers.opera
+if using firefox:
+    BROWSER = Browsers.firefox
+"""
+BROWSER = Browsers.chrome
 
 # school name, example: SCHOOL = "osghengelo"
 SCHOOL = "osghengelo"
