@@ -24,7 +24,7 @@ then specify your school name, example:
 `SCHOOL = "osghengelo"`  
 
 then specify your login info, example:  
-```
+```python
 LOGIN = (
   "12345",
   "weakPassword"
