@@ -38,3 +38,5 @@ LOGIN = (
   "weakPassword"
 )
 ```
+
+## NOTE: this project is on hold and not being worken on
