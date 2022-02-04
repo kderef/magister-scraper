@@ -13,7 +13,7 @@ or download it from [here](https://pypi.org/project/selenium/).
 
 ---
 ## download instructions  
-download [this](https://github.com/x-kvoid-x/magister-scraper/archive/refs/heads/main.zip). 
+click on [this](https://github.com/x-kvoid-x/magister-scraper/archive/refs/heads/main.zip). 
 
 ---
 ## how to use.  
