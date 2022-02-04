@@ -39,4 +39,4 @@ LOGIN = (
 )
 ```
 
-## NOTE: this project is on hold and not being worken on
+## NOTE: this project is on hold and not being worked on
