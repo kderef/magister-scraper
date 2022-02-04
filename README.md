@@ -21,7 +21,9 @@ specify your browser, example:
 `BROWSER = Browsers.chrome`  
 
 then specify your school name, example:  
-```python SCHOOL = "osghengelo"```   
+```python 
+SCHOOL = "osghengelo"
+```   
 
 then specify your login info, example:  
 ```python
