@@ -7,7 +7,8 @@ def main():
   cijfers = m.cijfers()
   
   print("laatste cijfers:\n")
-  print(cijfers)
+  for cijfer in cijfers:
+    print(cijfer.vak, cijfer.description, cijfer.cijfer, cijfer.type)
  
 if __name__ == "__main__":
   main()
