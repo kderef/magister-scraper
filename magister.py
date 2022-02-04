@@ -36,7 +36,6 @@ class Cijfer:
         self.inhalen = inhalen
 
         if cijfer == "O" or cijfer == "T" or cijfer == "V" or cijfer == "G":
-
             self.type = "werkhouding"
         elif cijfer == "Inh":
             self.type = "inhalen"
