@@ -18,7 +18,9 @@ first, go the directory where you downloaded the zip. (see download instructions
 unzip it.  
 then open the file 'config.py' with notepad or another text editor.  
 specify your browser, example:    
-`BROWSER = Browsers.chrome`  
+```python
+BROWSER = Browsers.chrome
+```
 
 then specify your school name, example:  
 ```python 
