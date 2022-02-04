@@ -1,6 +1,6 @@
 # magister-scraper
-scraper for Magister 6.
-if you encounter any issues or errors, post them in the issues tab.
+scraper for Magister 6.  
+if you encounter any issues or errors, post them in [the issues tab](https://github.com/x-kvoid-x/magister-scraper/issues).
 
 **NOTE**: before you can run this, you need to install *selenium*
 
