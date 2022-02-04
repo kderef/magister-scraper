@@ -1,5 +1,6 @@
 # magister-scraper
-scraper for Magister 6
+scraper for Magister 6.
+if you encounter any issues or errors, post them in the issues tab.
 
 **NOTE**: before you can run this, you need to install *selenium*
 
