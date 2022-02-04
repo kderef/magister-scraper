@@ -77,11 +77,11 @@ class Magister:
             raise DriverNotFoundError("ERROR: driver needs to be in folder.")
 
         log("INFO", '[driver path] = "{}"'.format(DRIVER))
+        log("INFO", "starting client...")
         if config.BROWSER.startswith("geckodriver"):
             self.opts = FirefoxOptions()
             self.opts.headless = self.nobrowser
 
-            log("INFO", "starting client...")
             self.driver = Firefox(options=self.opts, executable_path=DRIVER)
         elif config.BROWSER.startswith("operadriver"):
             self.opts = ChromeOptions()
@@ -105,7 +105,7 @@ class Magister:
             self.opts.add_argument("--silent")
             self.driver = Chrome(options=self.opts, executable_path=DRIVER)
 
-        log("INFO", "starting client...")
+        
 
         print("\n\033[93mloading login page...", end="\033[92m")
         sleep(0.3)
@@ -148,16 +148,38 @@ class Magister:
         print("done.\033[0m")
         """ login successful """
 
-    def agenda_items(self) -> list:
-        # TODO implement this
+    def agenda_items(self) -> list[dict]:
+        self.go_agenda()
+        items = []
 
-        WebDriverWait(self.driver, 6).until_not(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "icon-calendar"))
-        )
+        agenda = self.driver.find_elements(By.TAG_NAME, 'tr')
+        agenda_ch = [agenda[i:i+3] for i in range(0, len(agenda))]
+        for i, _ in enumerate(agenda_ch):
+            agenda_ch[i] = [x.text for x in agenda_ch[i] if x.text != ""]
+        
+        # NOTE work in progress
+        # TODO
+        for dag in agenda_ch:
+            if dag == []:
+                continue
+            try:
+                desc = dag[1].replace("  \nHuiswerk", "").split('\n')[2]
+            except IndexError:
+                desc = ""
+            vak = dag[1].split('\n')[1]
+            tijd = dag[1].split('\n')[0]
+            items.append(
+                {
+                    'dag': dag[0],
+                    'tijd': tijd,
+                    'vak': vak,
+                    'desc': desc
+                }
+            )
 
-        times = [i.text for i in self.driver.find_elements_by_class_name("les-info")]
-        # items = [i.text for i in self.driver.find_elements_by_tag_name("td")]
-        print(times)
+        
+        return items
+
 
     def go_home(self):
         WebDriverWait(self.driver, 6).until(
@@ -171,6 +193,8 @@ class Magister:
             EC.presence_of_element_located((By.ID, "menu-agenda"))
         )
         self.driver.find_element_by_id("menu-agenda").click()
+        
+        sleep(1.5)
         log("INFO", "went to agenda page")
 
     def go_leermiddelen(self):
